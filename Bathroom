@@ -1,0 +1,79 @@
+local p=game.Players.LocalPlayer
+local g=Instance.new("ScreenGui")
+g.ResetOnSpawn=false
+g.Parent=p:WaitForChild("PlayerGui")
+local f=Instance.new("ScrollingFrame")
+f.Parent=g
+f.BackgroundColor3=Color3.new(0,0,0)
+f.Size=UDim2.new(0.2,0,0.2,0)
+f.Position=UDim2.new(0.05,0,0.05,0)
+f.BackgroundTransparency=0.2
+f.BorderSizePixel=0
+local u=Instance.new("UIStroke",f)
+u.Thickness=10
+u.Color=Color3.new(0,0,0)
+u.Transparency=0.2
+local tx=Instance.new("TextLabel",g)
+tx.Size=UDim2.new(0.2,0,0.03,0)
+tx.Position=UDim2.new(0.05,0,0.007,0)
+tx.Text="Bathroom attack script, made by Exuctive_Mem on discord."
+tx.TextColor3=Color3.new(1,1,1)
+tx.TextScaled=true
+tx.BackgroundColor3=Color3.new(0,0,0)
+tx.BackgroundTransparency=0.2
+tx.BorderSizePixel=0
+local B=Instance.new("TextButton")
+B.Parent=f
+B.Size=UDim2.new(1,0,0.02,0)
+B.Position=UDim2.new(0,0,0,0)
+B.BackgroundColor3=Color3.new(0.1,0.1,0.1)
+B.Text="Toggle Autofarm"
+B.TextColor3=Color3.new(1,1,1)
+B.TextScaled=true
+B.BorderSizePixel=0
+Instance.new("UICorner",B).CornerRadius=UDim.new(0,8)
+local autofarmActive=false
+B.MouseButton1Click:Connect(function()
+autofarmActive=not autofarmActive
+while autofarmActive do
+wait(0.001)
+local enemies=workspace.Enemies:GetChildren()
+if #enemies>0 then
+local randomEnemy=enemies[math.random(1,#enemies)]
+local enemyHead=randomEnemy:FindFirstChild("Head")
+if enemyHead then
+local enemyPos=enemyHead.Position
+local targetPos=Vector3.new(enemyPos.X,enemyPos.Y-2,enemyPos.Z)
+local lookAtCFrame=CFrame.lookAt(p.Character.HumanoidRootPart.Position,enemyPos)
+p.Character.HumanoidRootPart.CFrame=CFrame.new(targetPos,enemyPos)
+local dropPart=workspace.TmpObjects:FindFirstChild("DropOutPart")
+if dropPart then
+p.Character.HumanoidRootPart.CFrame=dropPart.TriggerPart.CFrame
+end
+local toolFound=false
+for _,tool in pairs(p.Character:GetChildren())do
+if tool:IsA("Tool")then
+tool:Activate()
+toolFound=true
+break
+end
+end
+if not toolFound then
+warn("No tool found in character.")
+end
+wait(0.15)
+end
+end
+end
+end)
+local sound=Instance.new("Sound")
+sound.SoundId="rbxassetid://6042053626"
+sound.Parent=game.SoundService
+local children=f:GetChildren()
+for _,child in pairs(children)do
+if child:IsA("TextButton")then
+child.MouseButton1Click:Connect(function()
+sound:Play()
+end)
+end
+end
